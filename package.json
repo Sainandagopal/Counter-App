@@ -1,0 +1,18 @@
+{
+  "name": "counter-app",
+  "version": "1.0.0",
+  "description": "A high-aesthetic, zero-dependency Counter App built with Node.js built-in http module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "nodejs",
+    "http",
+    "vanillajs",
+    "counter",
+    "zero-dependency"
+  ],
+  "author": "",
+  "license": "ISC"
+}

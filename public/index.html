@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="cyber">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Counter | Responsive Node.js Application</title>
+  <meta name="description" content="A fast, elegant, zero-dependency Counter web application with distinct vibrant themes, sound effects, animations, and persistent storage.">
+  
+  <!-- Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       DESIGN SYSTEM & VIBRANT HIGH-CONTRAST THEMES
+       ========================================================================== */
+    :root {
+      --font-body: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Space Grotesk', monospace;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 22px;
+      --radius-xl: 32px;
+      --transition-smooth: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-spring: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* 1. Cyber Indigo Theme (Deep Space Navy & Electric Violet) */
+    html[data-theme="cyber"] {
+      --bg-base: #0a0e1a;
+      --bg-gradient: radial-gradient(at 0% 0%, #312e81 0px, transparent 65%),
+                     radial-gradient(at 100% 100%, #1e1b4b 0px, transparent 60%),
+                     #0a0e1a;
+      --card-bg: rgba(19, 25, 47, 0.92);
+      --card-border: rgba(129, 140, 248, 0.35);
+      --card-glow: rgba(99, 102, 241, 0.4);
+      
+      --accent-primary: #6366f1;
+      --accent-primary-hover: #4f46e5;
+      --accent-primary-glow: rgba(99, 102, 241, 0.7);
+      
+      --accent-inc: #10b981;
+      --accent-inc-glow: rgba(16, 185, 129, 0.6);
+      --accent-inc-bg: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(5, 150, 105, 0.45) 100%);
+      
+      --accent-dec: #f43f5e;
+      --accent-dec-glow: rgba(244, 63, 94, 0.6);
+      --accent-dec-bg: linear-gradient(135deg, rgba(244, 63, 94, 0.28) 0%, rgba(225, 29, 72, 0.42) 100%);
+
+      --text-main: #f8fafc;
+      --text-muted: #cbd5e1;
+      --text-dim: #94a3b8;
+      --chip-bg: rgba(255, 255, 255, 0.08);
+      --chip-border: rgba(255, 255, 255, 0.16);
+      --chip-active-bg: #6366f1;
+      --chip-active-border: #818cf8;
+
+      --orb-1: rgba(99, 102, 241, 0.45);
+      --orb-2: rgba(236, 72, 153, 0.3);
+    }
+
+    /* 2. Cyber Emerald Theme (Deep Lush Forest & Radiant Neon Mint) */
+    html[data-theme="emerald"] {
+      --bg-base: #022c22;
+      --bg-gradient: radial-gradient(at 0% 0%, #065f46 0px, transparent 65%),
+                     radial-gradient(at 100% 100%, #047857 0px, transparent 60%),
+                     #022c22;
+      --card-bg: rgba(6, 78, 59, 0.92);
+      --card-border: rgba(52, 211, 153, 0.45);
+      --card-glow: rgba(16, 185, 129, 0.5);
+      
+      --accent-primary: #10b981;
+      --accent-primary-hover: #059669;
+      --accent-primary-glow: rgba(16, 185, 129, 0.75);
+      
+      --accent-inc: #34d399;
+      --accent-inc-glow: rgba(52, 211, 153, 0.7);
+      --accent-inc-bg: linear-gradient(135deg, rgba(52, 211, 153, 0.32) 0%, rgba(16, 185, 129, 0.5) 100%);
+      
+      --accent-dec: #f59e0b;
+      --accent-dec-glow: rgba(245, 158, 11, 0.6);
+      --accent-dec-bg: linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.45) 100%);
+
+      --text-main: #f0fdf4;
+      --text-muted: #bbf7d0;
+      --text-dim: #86efac;
+      --chip-bg: rgba(16, 185, 129, 0.16);
+      --chip-border: rgba(52, 211, 153, 0.35);
+      --chip-active-bg: #10b981;
+      --chip-active-border: #6ee7b7;
+
+      --orb-1: rgba(16, 185, 129, 0.5);
+      --orb-2: rgba(6, 182, 212, 0.38);
+    }
+
+    /* 3. Sunset Ember Theme (Deep Velvet Wine & Warm Crimson Gold) */
+    html[data-theme="sunset"] {
+      --bg-base: #1f0410;
+      --bg-gradient: radial-gradient(at 0% 0%, #831843 0px, transparent 65%),
+                     radial-gradient(at 100% 100%, #701a75 0px, transparent 60%),
+                     #1f0410;
+      --card-bg: rgba(68, 8, 35, 0.92);
+      --card-border: rgba(251, 113, 133, 0.45);
+      --card-glow: rgba(244, 63, 94, 0.5);
+      
+      --accent-primary: #f43f5e;
+      --accent-primary-hover: #e11d48;
+      --accent-primary-glow: rgba(244, 63, 94, 0.75);
+      
+      --accent-inc: #f59e0b;
+      --accent-inc-glow: rgba(245, 158, 11, 0.7);
+      --accent-inc-bg: linear-gradient(135deg, rgba(245, 158, 11, 0.32) 0%, rgba(217, 119, 6, 0.52) 100%);
+      
+      --accent-dec: #ec4899;
+      --accent-dec-glow: rgba(236, 72, 153, 0.6);
+      --accent-dec-bg: linear-gradient(135deg, rgba(236, 72, 153, 0.3) 0%, rgba(219, 39, 119, 0.46) 100%);
+
+      --text-main: #fff1f2;
+      --text-muted: #fecdd3;
+      --text-dim: #fda4af;
+      --chip-bg: rgba(244, 63, 94, 0.16);
+      --chip-border: rgba(251, 113, 133, 0.35);
+      --chip-active-bg: #f43f5e;
+      --chip-active-border: #fda4af;
+
+      --orb-1: rgba(244, 63, 94, 0.5);
+      --orb-2: rgba(245, 158, 11, 0.38);
+    }
+
+    /* 4. Frost Luxury Theme (Crisp Porcelain White & Royal Blue Light Mode) */
+    html[data-theme="frost"] {
+      --bg-base: #f0f4f8;
+      --bg-gradient: radial-gradient(at 0% 0%, #dbeafe 0px, transparent 65%),
+                     radial-gradient(at 100% 100%, #e0e7ff 0px, transparent 60%),
+                     #f0f4f8;
+      --card-bg: rgba(255, 255, 255, 0.96);
+      --card-border: rgba(203, 213, 225, 0.9);
+      --card-glow: rgba(99, 102, 241, 0.22);
+      
+      --accent-primary: #4f46e5;
+      --accent-primary-hover: #4338ca;
+      --accent-primary-glow: rgba(79, 70, 229, 0.45);
+      
+      --accent-inc: #059669;
+      --accent-inc-glow: rgba(5, 150, 105, 0.45);
+      --accent-inc-bg: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.34) 100%);
+      
+      --accent-dec: #e11d48;
+      --accent-dec-glow: rgba(225, 29, 72, 0.45);
+      --accent-dec-bg: linear-gradient(135deg, rgba(244, 63, 94, 0.2) 0%, rgba(225, 29, 72, 0.34) 100%);
+
+      --text-main: #0f172a;
+      --text-muted: #334155;
+      --text-dim: #64748b;
+      --chip-bg: rgba(15, 23, 42, 0.06);
+      --chip-border: rgba(15, 23, 42, 0.15);
+      --chip-active-bg: #4f46e5;
+      --chip-active-border: #6366f1;
+
+      --orb-1: rgba(99, 102, 241, 0.2);
+      --orb-2: rgba(6, 182, 212, 0.18);
+    }
+
+    /* ==========================================================================
+       GLOBAL LAYOUT
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      font-family: var(--font-body);
+      background-color: var(--bg-base);
+      background-image: var(--bg-gradient);
+      background-attachment: fixed;
+      color: var(--text-main);
+      transition: background 0.45s ease, color 0.3s ease;
+      overflow-x: hidden;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(0.75rem, 3vw, 2.5rem);
+      touch-action: manipulation;
+      position: relative;
+    }
+
+    /* Ambient Glow Orbs */
+    .ambient-background {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ambient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(85px);
+      opacity: 0.75;
+      animation: floatPulse 16s ease-in-out infinite alternate;
+      transition: background 0.5s ease;
+    }
+
+    .ambient-orb-1 {
+      top: 10%;
+      left: 15%;
+      width: min(520px, 72vw);
+      height: min(520px, 72vw);
+      background: var(--orb-1);
+    }
+
+    .ambient-orb-2 {
+      bottom: 10%;
+      right: 15%;
+      width: min(480px, 68vw);
+      height: min(480px, 68vw);
+      background: var(--orb-2);
+      animation-delay: -6s;
+    }
+
+    @keyframes floatPulse {
+      0% { transform: scale(0.92) translate(0, 0); }
+      100% { transform: scale(1.18) translate(35px, -35px); }
+    }
+
+    /* Interactive Particle Canvas */
+    #fx-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 99;
+    }
+
+    /* ==========================================================================
+       TOP NAVIGATION BAR & THEME SELECTOR PILLS
+       ========================================================================== */
+    .top-bar {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding: 0.55rem 0.85rem;
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.35);
+      transition: var(--transition-smooth);
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
+      color: var(--text-main);
+    }
+
+    .brand-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-inc));
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 900;
+    }
+
+    /* Visual Theme Selector Pills */
+    .theme-pills-wrap {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      padding: 3px;
+      border-radius: var(--radius-sm);
+    }
+
+    .theme-pill-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 9px;
+      border-radius: 7px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      outline: none;
+      transition: var(--transition-smooth);
+    }
+
+    .theme-pill-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .theme-pill-btn.active {
+      background: var(--card-bg);
+      border-color: var(--card-border);
+      color: var(--text-main);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .theme-pill-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .dot-cyber { background: #818cf8; box-shadow: 0 0 6px #818cf8; }
+    .dot-emerald { background: #34d399; box-shadow: 0 0 6px #34d399; }
+    .dot-sunset { background: #f43f5e; box-shadow: 0 0 6px #f43f5e; }
+    .dot-frost { background: #0284c7; box-shadow: 0 0 6px #0284c7; }
+
+    /* Native Select Dropdown (Styled with Guaranteed High Contrast) */
+    .theme-select {
+      display: none; /* Fallback for screen readers */
+      appearance: none;
+      -webkit-appearance: none;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 6px 26px 6px 10px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .theme-select option {
+      padding: 10px 14px;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .theme-select option[value="cyber"] {
+      background-color: #0e1222 !important;
+      color: #a5b4fc !important;
+    }
+
+    .theme-select option[value="emerald"] {
+      background-color: #022c22 !important;
+      color: #6ee7b7 !important;
+    }
+
+    .theme-select option[value="sunset"] {
+      background-color: #2a0516 !important;
+      color: #fda4af !important;
+    }
+
+    .theme-select option[value="frost"] {
+      background-color: #ffffff !important;
+      color: #0f172a !important;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.92rem;
+      transition: var(--transition-smooth);
+      outline: none;
+    }
+
+    .icon-btn:hover {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* ==========================================================================
+       MAIN CARD CONTAINER & CARD
+       ========================================================================== */
+    .app-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .counter-card {
+      position: relative;
+      background: var(--card-bg);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-xl);
+      padding: clamp(1.75rem, 5vw, 2.75rem) clamp(1.25rem, 4vw, 2.5rem);
+      box-shadow: 
+        0 28px 65px -12px rgba(0, 0, 0, 0.65),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+      text-align: center;
+      overflow: hidden;
+      transition: var(--transition-smooth);
+    }
+
+    /* Header & Status Pill */
+    .card-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulseGlow 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(0.8); opacity: 0.45; }
+    }
+
+    .app-title {
+      font-size: clamp(1.6rem, 4vw, 2.1rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-main);
+      line-height: 1.1;
+    }
+
+    .app-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      font-weight: 500;
+    }
+
+    /* ==========================================================================
+       COUNTER DISPLAY STAGE (CLEAN, SIMPLE, NO OVERLAPS)
+       ========================================================================== */
+    .counter-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 1.25rem 0 1.75rem;
+    }
+
+    .counter-display-wrap {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0.6rem 1.75rem;
+      border-radius: var(--radius-lg);
+      transition: var(--transition-smooth);
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      min-width: 200px;
+    }
+
+    .counter-display-wrap:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--accent-primary);
+    }
+
+    .counter-display {
+      font-family: var(--font-mono);
+      font-size: clamp(5rem, 15vw, 7.5rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: var(--text-main);
+      text-shadow: 0 10px 36px var(--accent-primary-glow);
+      transition: text-shadow 0.3s ease, color 0.3s ease;
+      user-select: none;
+      word-break: break-all;
+    }
+
+    /* Digit Animation Classes */
+    .anim-slide-up {
+      animation: digitSlideUp 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .anim-slide-down {
+      animation: digitSlideDown 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .anim-reset {
+      animation: digitReset 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes digitSlideUp {
+      0% { transform: translateY(18px) scale(0.92); opacity: 0; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    @keyframes digitSlideDown {
+      0% { transform: translateY(-18px) scale(0.92); opacity: 0; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    @keyframes digitReset {
+      0% { transform: scale(0.7) rotate(-12deg); opacity: 0; }
+      70% { transform: scale(1.1) rotate(3deg); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    /* ==========================================================================
+       STEP MULTIPLIER CONTROLS
+       ========================================================================== */
+    .step-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .step-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+    }
+
+    .step-chips {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      flex-wrap: wrap;
+    }
+
+    .step-chip {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      outline: none;
+    }
+
+    .step-chip:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .step-chip.active {
+      background: var(--chip-active-bg);
+      border-color: var(--chip-active-border);
+      color: #ffffff;
+      box-shadow: 0 4px 12px -2px var(--accent-primary-glow);
+    }
+
+    /* ==========================================================================
+       PRIMARY ACTION BUTTONS (STACKED & CLEAN)
+       ========================================================================== */
+    .primary-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .btn-action {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.15rem 1rem;
+      border-radius: var(--radius-lg);
+      font-family: inherit;
+      cursor: pointer;
+      border: 1px solid transparent;
+      outline: none;
+      transition: var(--transition-spring);
+      box-shadow: 0 10px 24px -6px rgba(0, 0, 0, 0.45);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-action:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.01);
+    }
+
+    .btn-action:active:not(:disabled),
+    .btn-action.key-pressed {
+      transform: translateY(2px) scale(0.97) !important;
+    }
+
+    .btn-action:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-content-flow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      width: 100%;
+      pointer-events: none;
+    }
+
+    .btn-label-row {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: clamp(1rem, 2.6vw, 1.25rem);
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .btn-hold-hint {
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      opacity: 0.75;
+      line-height: 1;
+    }
+
+    .btn-decrement {
+      background: var(--accent-dec-bg);
+      border-color: rgba(244, 63, 94, 0.4);
+      color: #fda4af;
+    }
+
+    .btn-decrement:hover:not(:disabled) {
+      border-color: rgba(244, 63, 94, 0.85);
+      color: #ffffff;
+      box-shadow: 0 12px 28px -4px var(--accent-dec-glow);
+    }
+
+    .btn-increment {
+      background: var(--accent-inc-bg);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #6ee7b7;
+    }
+
+    .btn-increment:hover:not(:disabled) {
+      border-color: rgba(16, 185, 129, 0.9);
+      color: #ffffff;
+      box-shadow: 0 12px 28px -4px var(--accent-inc-glow);
+    }
+
+    /* Clean Full-Width Reset Button (Simple & Elegant) */
+    .reset-container {
+      margin-bottom: 1.25rem;
+    }
+
+    .btn-reset-full {
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0.88rem 1rem;
+      border-radius: var(--radius-md);
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      outline: none;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-reset-full:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--text-muted);
+      color: var(--text-main);
+      transform: translateY(-1px);
+    }
+
+    .btn-reset-full:active:not(:disabled),
+    .btn-reset-full.key-pressed {
+      transform: translateY(1px) scale(0.98);
+    }
+
+    /* Telemetry Grid */
+    .telemetry-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--chip-border);
+    }
+
+    .stat-pill {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      padding: 0.6rem 0.4rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .stat-title {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-dim);
+      margin-bottom: 3px;
+    }
+
+    .stat-value {
+      font-family: var(--font-mono);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Activity Feed Drawer */
+    .activity-section {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 0.9rem 1.25rem;
+      box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.35);
+      transition: var(--transition-smooth);
+    }
+
+    .activity-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .activity-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .activity-chevron {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      transition: transform 0.25s ease;
+    }
+
+    .activity-section.open .activity-chevron {
+      transform: rotate(180deg);
+    }
+
+    .activity-list {
+      display: none;
+      margin-top: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 130px;
+      overflow-y: auto;
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      border-radius: 8px;
+      font-size: 0.76rem;
+    }
+
+    .activity-tag {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .activity-tag.inc { background: rgba(16, 185, 129, 0.25); color: #6ee7b7; }
+    .activity-tag.dec { background: rgba(244, 63, 94, 0.25); color: #fda4af; }
+    .activity-tag.reset { background: rgba(99, 102, 241, 0.25); color: #a5b4fc; }
+
+    .activity-time {
+      color: var(--text-dim);
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+    }
+
+    /* Footer & Hotkeys */
+    .app-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0.5rem;
+      font-size: 0.76rem;
+      color: var(--text-dim);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .hotkey-list {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    kbd {
+      background: var(--chip-bg);
+      border: 1px solid var(--chip-border);
+      border-radius: 5px;
+      padding: 2px 6px;
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    kbd.active-key {
+      background: var(--accent-primary);
+      color: #fff;
+    }
+
+    /* Direct Value Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease;
+      padding: 1rem;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.6);
+      text-align: center;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 0.4rem;
+    }
+
+    .modal-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .modal-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.35);
+      border: 2px solid var(--chip-border);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 1.25rem;
+      outline: none;
+    }
+
+    .modal-input:focus {
+      border-color: var(--accent-primary);
+    }
+
+    .modal-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .btn-modal {
+      padding: 0.8rem;
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .btn-modal-cancel {
+      background: var(--chip-bg);
+      border-color: var(--chip-border);
+      color: var(--text-muted);
+    }
+
+    .btn-modal-submit {
+      background: var(--accent-primary);
+      color: #fff;
+    }
+
+    .shortcuts-table {
+      width: 100%;
+      margin: 1rem 0;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.82rem;
+    }
+
+    .shortcuts-table td {
+      padding: 7px 6px;
+      border-bottom: 1px solid var(--chip-border);
+    }
+
+    /* Toast */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--card-border);
+      color: #ffffff;
+      padding: 9px 20px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 2000;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 0.75rem; }
+      .counter-card { padding: 1.5rem 1rem; border-radius: 24px; }
+      .primary-controls { gap: 0.5rem; }
+      .btn-action { padding: 1rem 0.6rem; }
+      .top-bar { padding: 0.4rem 0.6rem; }
+      .theme-pill-label { display: none; }
+      .theme-pill-btn { padding: 5px 6px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Glow -->
+  <div class="ambient-background" aria-hidden="true">
+    <div class="ambient-orb ambient-orb-1"></div>
+    <div class="ambient-orb ambient-orb-2"></div>
+  </div>
+
+  <!-- Interactive FX Canvas -->
+  <canvas id="fx-canvas" aria-hidden="true"></canvas>
+
+  <!-- Top Utilities Bar -->
+  <header class="top-bar" role="banner">
+    <div class="brand-mark">
+      <div class="brand-icon">⚡</div>
+      <span>Counter</span>
+    </div>
+
+    <!-- Visual Interactive Theme Switcher Pills -->
+    <div class="theme-pills-wrap" role="radiogroup" aria-label="Select theme">
+      <button class="theme-pill-btn active" data-theme="cyber" title="Cyber Indigo">
+        <span class="theme-pill-dot dot-cyber"></span>
+        <span class="theme-pill-label">Indigo</span>
+      </button>
+      <button class="theme-pill-btn" data-theme="emerald" title="Cyber Emerald">
+        <span class="theme-pill-dot dot-emerald"></span>
+        <span class="theme-pill-label">Emerald</span>
+      </button>
+      <button class="theme-pill-btn" data-theme="sunset" title="Sunset Ember">
+        <span class="theme-pill-dot dot-sunset"></span>
+        <span class="theme-pill-label">Sunset</span>
+      </button>
+      <button class="theme-pill-btn" data-theme="frost" title="Frost Luxury">
+        <span class="theme-pill-dot dot-frost"></span>
+        <span class="theme-pill-label">Frost</span>
+      </button>
+    </div>
+
+    <!-- Hidden synced select for accessibility -->
+    <select id="theme-selector" class="theme-select" aria-label="Select theme" style="display:none;">
+      <option value="cyber">Cyber Indigo</option>
+      <option value="emerald">Cyber Emerald</option>
+      <option value="sunset">Sunset Ember</option>
+      <option value="frost">Frost Luxury</option>
+    </select>
+
+    <div class="top-actions">
+      <button id="btn-sound-toggle" class="icon-btn" title="Toggle audio (M)" aria-label="Toggle Sound">
+        <span id="sound-icon">🔊</span>
+      </button>
+
+      <button id="btn-shortcuts-toggle" class="icon-btn" title="Shortcuts (?)" aria-label="Keyboard Shortcuts">
+        <span>⌨️</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="app-container" role="main">
+    
+    <section class="counter-card" id="card-3d" aria-label="Counter Stage">
+
+      <!-- Header & Server Synced Pill -->
+      <div class="card-header">
+        <div class="status-pill" id="status-pill" title="Synchronized with Node.js data.json">
+          <span class="pulse-dot" id="status-dot"></span>
+          <span id="status-text">Server Synced</span>
+        </div>
+        <h1 class="app-title">Counter</h1>
+        <p class="app-subtitle">Zero npm dependencies • Instant atomic sync</p>
+      </div>
+
+      <!-- Counter Stage (Clean, simple, no target overlays) -->
+      <div class="counter-stage">
+        <div class="counter-display-wrap" id="counter-wrap" title="Click to manually set count">
+          <div class="counter-display" id="counter-value" aria-live="polite">0</div>
+        </div>
+      </div>
+
+      <!-- Step Multipliers -->
+      <div class="step-section">
+        <span class="step-label">Step Multiplier</span>
+        <div class="step-chips" role="radiogroup" aria-label="Step amount">
+          <button class="step-chip active" data-step="1" role="radio" aria-checked="true">±1</button>
+          <button class="step-chip" data-step="5" role="radio" aria-checked="false">±5</button>
+          <button class="step-chip" data-step="10" role="radio" aria-checked="false">±10</button>
+          <button class="step-chip" data-step="50" role="radio" aria-checked="false">±50</button>
+          <button class="step-chip" data-step="100" role="radio" aria-checked="false">±100</button>
+        </div>
+      </div>
+
+      <!-- Primary Action Buttons (Stacked Flex - Zero Overlap) -->
+      <div class="primary-controls">
+        
+        <button id="btn-decrement" class="btn-action btn-decrement" aria-label="Decrease count" title="Decrease count (-)">
+          <div class="btn-content-flow">
+            <div class="btn-label-row">
+              <span>−</span>
+              <span id="label-decrement">Decrease</span>
+            </div>
+            <span class="btn-hold-hint">Hold to repeat</span>
+          </div>
+        </button>
+
+        <button id="btn-increment" class="btn-action btn-increment" aria-label="Increase count" title="Increase count (+)">
+          <div class="btn-content-flow">
+            <div class="btn-label-row">
+              <span>+</span>
+              <span id="label-increment">Increase</span>
+            </div>
+            <span class="btn-hold-hint">Hold to repeat</span>
+          </div>
+        </button>
+
+      </div>
+
+      <!-- Simple Full-Width Reset Button -->
+      <div class="reset-container">
+        <button id="btn-reset" class="btn-reset-full" aria-label="Reset counter" title="Reset count to 0 (R)">
+          <span>↺</span>
+          <span>Reset to Zero</span>
+        </button>
+      </div>
+
+      <!-- Session Telemetry Grid -->
+      <div class="telemetry-grid">
+        <div class="stat-pill">
+          <span class="stat-title">Session Clicks</span>
+          <span class="stat-value" id="stat-clicks">0</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-title">Peak High</span>
+          <span class="stat-value" id="stat-peak-high">0</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-title">Peak Low</span>
+          <span class="stat-value" id="stat-peak-low">0</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Activity Log Drawer -->
+    <section class="activity-section" id="activity-section">
+      <div class="activity-header" id="activity-toggle">
+        <div class="activity-title">
+          <span>⚡</span>
+          <span>Session Activity Log</span>
+        </div>
+        <span class="activity-chevron" id="activity-chevron">▼</span>
+      </div>
+      <div class="activity-list" id="activity-list" style="display: none;">
+        <div class="activity-item">
+          <span class="activity-tag reset">INIT</span>
+          <span>Counter connected</span>
+          <span class="activity-time">Just now</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hotkeys Footer -->
+    <footer class="app-footer">
+      <div class="hotkey-list">
+        <span>Hotkeys:</span>
+        <kbd id="kbd-plus">+</kbd>
+        <kbd id="kbd-minus">−</kbd>
+        <kbd id="kbd-r">R</kbd>
+        <kbd id="kbd-space">Space</kbd>
+      </div>
+      <div>Zero external npm modules</div>
+    </footer>
+
+  </main>
+
+  <!-- Modal: Set Count Value Directly -->
+  <div class="modal-overlay" id="modal-set-value" role="dialog" aria-modal="true" aria-labelledby="modal-set-title">
+    <div class="modal-card">
+      <h2 class="modal-title" id="modal-set-title">Set Counter Value</h2>
+      <p class="modal-desc">Enter any integer value to save to server.</p>
+      <input type="number" id="input-direct-value" class="modal-input" placeholder="0">
+      <div class="modal-actions">
+        <button class="btn-modal btn-modal-cancel" id="btn-cancel-value">Cancel</button>
+        <button class="btn-modal btn-modal-submit" id="btn-submit-value">Save Value</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Shortcuts Help -->
+  <div class="modal-overlay" id="modal-shortcuts" role="dialog" aria-modal="true" aria-labelledby="modal-shortcuts-title">
+    <div class="modal-card">
+      <h2 class="modal-title" id="modal-shortcuts-title">Keyboard Shortcuts</h2>
+      <p class="modal-desc">Quick hotkeys for desktop power users.</p>
+      <table class="shortcuts-table">
+        <tbody>
+          <tr><td><kbd>+</kbd> or <kbd>↑</kbd> or <kbd>Space</kbd></td><td>Increment count</td></tr>
+          <tr><td><kbd>−</kbd> or <kbd>↓</kbd></td><td>Decrement count</td></tr>
+          <tr><td><kbd>R</kbd></td><td>Reset counter to 0</td></tr>
+          <tr><td><kbd>1</kbd> .. <kbd>5</kbd></td><td>Select step: 1, 5, 10, 50, 100</td></tr>
+          <tr><td><kbd>M</kbd></td><td>Toggle sound effects</td></tr>
+          <tr><td><kbd>?</kbd></td><td>Toggle this dialog</td></tr>
+          <tr><td><kbd>Esc</kbd></td><td>Close dialogs</td></tr>
+        </tbody>
+      </table>
+      <button class="btn-modal btn-modal-submit" id="btn-close-shortcuts" style="width: 100%;">Done</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast-msg" role="status" aria-live="polite">
+    <span id="toast-icon">⚡</span>
+    <span id="toast-text">Message</span>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    (function () {
+      'use strict';
+
+      const state = {
+        count: 0,
+        currentStep: 1,
+        soundEnabled: localStorage.getItem('counter_sound_enabled') !== 'false',
+        theme: localStorage.getItem('counter_active_theme') || 'cyber',
+        sessionClicks: 0,
+        peakHigh: 0,
+        peakLow: 0,
+        isBusy: false,
+        autoRepeatTimer: null,
+        autoRepeatInterval: null
+      };
+
+      const dom = {
+        html: document.documentElement,
+        counterValue: document.getElementById('counter-value'),
+        counterWrap: document.getElementById('counter-wrap'),
+        btnIncrement: document.getElementById('btn-increment'),
+        btnDecrement: document.getElementById('btn-decrement'),
+        btnReset: document.getElementById('btn-reset'),
+        labelIncrement: document.getElementById('label-increment'),
+        labelDecrement: document.getElementById('label-decrement'),
+        stepChips: document.querySelectorAll('.step-chip'),
+        statusPill: document.getElementById('status-pill'),
+        statusDot: document.getElementById('status-dot'),
+        statusText: document.getElementById('status-text'),
+        statClicks: document.getElementById('stat-clicks'),
+        statPeakHigh: document.getElementById('stat-peak-high'),
+        statPeakLow: document.getElementById('stat-peak-low'),
+        themePillBtns: document.querySelectorAll('.theme-pill-btn'),
+        themeSelector: document.getElementById('theme-selector'),
+        btnSoundToggle: document.getElementById('btn-sound-toggle'),
+        soundIcon: document.getElementById('sound-icon'),
+        btnShortcutsToggle: document.getElementById('btn-shortcuts-toggle'),
+        activitySection: document.getElementById('activity-section'),
+        activityToggle: document.getElementById('activity-toggle'),
+        activityList: document.getElementById('activity-list'),
+        toast: document.getElementById('toast'),
+        toastText: document.getElementById('toast-text'),
+        toastIcon: document.getElementById('toast-icon'),
+        modalSetValue: document.getElementById('modal-set-value'),
+        inputDirectValue: document.getElementById('input-direct-value'),
+        btnCancelValue: document.getElementById('btn-cancel-value'),
+        btnSubmitValue: document.getElementById('btn-submit-value'),
+        modalShortcuts: document.getElementById('modal-shortcuts'),
+        btnCloseShortcuts: document.getElementById('btn-close-shortcuts'),
+        fxCanvas: document.getElementById('fx-canvas'),
+        kbdPlus: document.getElementById('kbd-plus'),
+        kbdMinus: document.getElementById('kbd-minus'),
+        kbdR: document.getElementById('kbd-r'),
+        kbdSpace: document.getElementById('kbd-space')
+      };
+
+      // Native Web Audio Synthesizer
+      let audioCtx = null;
+      function initAudio() {
+        if (!audioCtx && (window.AudioContext || window.webkitAudioContext)) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContextClass();
+        }
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+      }
+
+      function playSound(type) {
+        if (!state.soundEnabled) return;
+        try {
+          initAudio();
+          if (!audioCtx) return;
+
+          const now = audioCtx.currentTime;
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          if (type === 'increment') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(540, now);
+            osc.frequency.exponentialRampToValueAtTime(880, now + 0.08);
+            gain.gain.setValueAtTime(0.08, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+            osc.start(now);
+            osc.stop(now + 0.1);
+          } else if (type === 'decrement') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(420, now);
+            osc.frequency.exponentialRampToValueAtTime(280, now + 0.08);
+            gain.gain.setValueAtTime(0.08, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+            osc.start(now);
+            osc.stop(now + 0.1);
+          } else if (type === 'reset') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(320, now);
+            osc.frequency.linearRampToValueAtTime(640, now + 0.15);
+            gain.gain.setValueAtTime(0.07, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+            osc.start(now);
+            osc.stop(now + 0.2);
+          }
+        } catch (e) {}
+      }
+
+      function triggerHaptic(duration = 15) {
+        if ('vibrate' in navigator) {
+          try { navigator.vibrate(duration); } catch (e) {}
+        }
+      }
+
+      // Canvas Particles
+      const canvas = dom.fxCanvas;
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      let isRenderingFX = false;
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      class Particle {
+        constructor(x, y, color, speed, size) {
+          this.x = x;
+          this.y = y;
+          this.color = color;
+          this.size = size;
+          const angle = Math.random() * Math.PI * 2;
+          const vel = (Math.random() * 0.6 + 0.4) * speed;
+          this.vx = Math.cos(angle) * vel;
+          this.vy = Math.sin(angle) * vel;
+          this.alpha = 1;
+          this.decay = Math.random() * 0.02 + 0.02;
+        }
+
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          this.alpha -= this.decay;
+          return this.alpha > 0;
+        }
+
+        draw(ctx) {
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, this.alpha);
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      function spawnParticles(x, y, color, count = 12) {
+        for (let i = 0; i < count; i++) {
+          particles.push(new Particle(
+            x + (Math.random() - 0.5) * 16,
+            y + (Math.random() - 0.5) * 16,
+            color,
+            4,
+            Math.random() * 4 + 2
+          ));
+        }
+        if (!isRenderingFX) {
+          isRenderingFX = true;
+          requestAnimationFrame(renderFX);
+        }
+      }
+
+      function renderFX() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles = particles.filter(p => p.update());
+        particles.forEach(p => p.draw(ctx));
+        if (particles.length > 0) {
+          requestAnimationFrame(renderFX);
+        } else {
+          isRenderingFX = false;
+        }
+      }
+
+      // Toast Notifications
+      let toastTimer = null;
+      function showToast(message, icon = '⚡') {
+        if (toastTimer) clearTimeout(toastTimer);
+        dom.toastText.textContent = message;
+        dom.toastIcon.textContent = icon;
+        dom.toast.classList.add('show');
+        toastTimer = setTimeout(() => {
+          dom.toast.classList.remove('show');
+        }, 2200);
+      }
+
+      function logActivity(type, text) {
+        const item = document.createElement('div');
+        item.className = 'activity-item';
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+        let tagClass = 'reset';
+        let tagText = 'ACTION';
+        if (type === 'inc') { tagClass = 'inc'; tagText = `+${state.currentStep}`; }
+        else if (type === 'dec') { tagClass = 'dec'; tagText = `-${state.currentStep}`; }
+        else if (type === 'reset') { tagClass = 'reset'; tagText = 'RESET'; }
+        else if (type === 'set') { tagClass = 'reset'; tagText = 'SET'; }
+
+        item.innerHTML = `
+          <span class="activity-tag ${tagClass}">${tagText}</span>
+          <span>${text}</span>
+          <span class="activity-time">${timeStr}</span>
+        `;
+        dom.activityList.insertBefore(item, dom.activityList.firstChild);
+        while (dom.activityList.children.length > 20) {
+          dom.activityList.removeChild(dom.activityList.lastChild);
+        }
+      }
+
+      function updateDisplay(newCount, animClass = null) {
+        state.count = newCount;
+        dom.counterValue.textContent = newCount;
+
+        if (newCount > state.peakHigh) state.peakHigh = newCount;
+        if (newCount < state.peakLow) state.peakLow = newCount;
+        dom.statClicks.textContent = state.sessionClicks;
+        dom.statPeakHigh.textContent = state.peakHigh;
+        dom.statPeakLow.textContent = state.peakLow;
+
+        if (newCount > 0) {
+          dom.counterValue.style.textShadow = '0 8px 30px var(--accent-inc-glow)';
+        } else if (newCount < 0) {
+          dom.counterValue.style.textShadow = '0 8px 30px var(--accent-dec-glow)';
+        } else {
+          dom.counterValue.style.textShadow = '0 8px 30px var(--accent-primary-glow)';
+        }
+
+        if (animClass) {
+          dom.counterValue.classList.remove('anim-slide-up', 'anim-slide-down', 'anim-reset');
+          void dom.counterValue.offsetWidth;
+          dom.counterValue.classList.add(animClass);
+        }
+      }
+
+      function setBusy(busy) {
+        state.isBusy = busy;
+        if (busy) {
+          dom.statusText.textContent = 'Updating...';
+          dom.statusDot.style.backgroundColor = '#fbbf24';
+          dom.statusDot.style.boxShadow = '0 0 8px #fbbf24';
+        } else {
+          dom.statusText.textContent = 'Server Synced';
+          dom.statusDot.style.backgroundColor = '#10b981';
+          dom.statusDot.style.boxShadow = '0 0 8px #10b981';
+        }
+      }
+
+      // API Integration
+      async function apiRequest(endpoint, method, payload = null, animClass = null) {
+        if (state.isBusy) return;
+        setBusy(true);
+
+        try {
+          const options = {
+            method: method,
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          };
+          if (payload) options.body = JSON.stringify(payload);
+
+          const res = await fetch(endpoint, options);
+          if (!res.ok) {
+            const errJson = await res.json().catch(() => ({}));
+            throw new Error(errJson.error || `HTTP ${res.status}`);
+          }
+
+          const data = await res.json();
+          if (typeof data.count === 'number') {
+            updateDisplay(data.count, animClass);
+          }
+        } catch (err) {
+          showToast(`Error: ${err.message}`, '⚠️');
+          dom.statusText.textContent = 'Offline';
+          dom.statusDot.style.backgroundColor = '#f43f5e';
+          dom.statusDot.style.boxShadow = '0 0 8px #f43f5e';
+        } finally {
+          setBusy(false);
+        }
+      }
+
+      function performIncrement() {
+        state.sessionClicks++;
+        playSound('increment');
+        triggerHaptic(15);
+        const rect = dom.btnIncrement.getBoundingClientRect();
+        spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, '#10b981', 12);
+        apiRequest(`/increment?amount=${state.currentStep}`, 'POST', { amount: state.currentStep }, 'anim-slide-up');
+        logActivity('inc', `Increased by ${state.currentStep}`);
+      }
+
+      function performDecrement() {
+        state.sessionClicks++;
+        playSound('decrement');
+        triggerHaptic(15);
+        const rect = dom.btnDecrement.getBoundingClientRect();
+        spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, '#f43f5e', 12);
+        apiRequest(`/decrement?amount=${state.currentStep}`, 'POST', { amount: state.currentStep }, 'anim-slide-down');
+        logActivity('dec', `Decreased by ${state.currentStep}`);
+      }
+
+      function performReset() {
+        state.sessionClicks++;
+        playSound('reset');
+        triggerHaptic(25);
+        const rect = dom.btnReset.getBoundingClientRect();
+        spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2, '#6366f1', 18);
+        apiRequest('/reset', 'POST', {}, 'anim-reset');
+        logActivity('reset', 'Counter reset to 0');
+        showToast('Counter reset to 0', '↺');
+      }
+
+      function performSetDirectValue(val) {
+        state.sessionClicks++;
+        playSound('reset');
+        triggerHaptic(20);
+        apiRequest(`/set?value=${val}`, 'POST', { value: val }, 'anim-reset');
+        logActivity('set', `Value set to ${val}`);
+        showToast(`Value set to ${val}`, '✓');
+      }
+
+      // Auto Repeat Long-Press
+      function startAutoRepeat(actionFn) {
+        actionFn();
+        state.autoRepeatTimer = setTimeout(() => {
+          state.autoRepeatInterval = setInterval(() => {
+            actionFn();
+          }, 110);
+        }, 350);
+      }
+
+      function stopAutoRepeat() {
+        if (state.autoRepeatTimer) clearTimeout(state.autoRepeatTimer);
+        if (state.autoRepeatInterval) clearInterval(state.autoRepeatInterval);
+        state.autoRepeatTimer = null;
+        state.autoRepeatInterval = null;
+      }
+
+      dom.btnIncrement.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+        startAutoRepeat(performIncrement);
+      });
+      dom.btnIncrement.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        startAutoRepeat(performIncrement);
+      }, { passive: false });
+
+      dom.btnDecrement.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+        startAutoRepeat(performDecrement);
+      });
+      dom.btnDecrement.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        startAutoRepeat(performDecrement);
+      }, { passive: false });
+
+      window.addEventListener('mouseup', stopAutoRepeat);
+      window.addEventListener('touchend', stopAutoRepeat);
+      window.addEventListener('touchcancel', stopAutoRepeat);
+
+      dom.btnReset.addEventListener('click', performReset);
+
+      // Step multiplier chips
+      dom.stepChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          dom.stepChips.forEach(c => {
+            c.classList.remove('active');
+            c.setAttribute('aria-checked', 'false');
+          });
+          chip.classList.add('active');
+          chip.setAttribute('aria-checked', 'true');
+          const stepVal = parseInt(chip.getAttribute('data-step'), 10);
+          state.currentStep = stepVal;
+          dom.labelIncrement.textContent = `Increase (+${stepVal})`;
+          dom.labelDecrement.textContent = `Decrease (-${stepVal})`;
+          playSound('increment');
+          triggerHaptic(10);
+        });
+      });
+
+      // Themes & Sounds
+      function applyTheme(themeName) {
+        state.theme = themeName;
+        dom.html.setAttribute('data-theme', themeName);
+        if (dom.themeSelector) dom.themeSelector.value = themeName;
+        
+        // Update active theme pill button
+        dom.themePillBtns.forEach(btn => {
+          const isActive = btn.getAttribute('data-theme') === themeName;
+          btn.classList.toggle('active', isActive);
+        });
+
+        localStorage.setItem('counter_active_theme', themeName);
+      }
+
+      // Click listener for visual theme pill buttons
+      dom.themePillBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const themeName = btn.getAttribute('data-theme');
+          applyTheme(themeName);
+          const themeTitle = btn.getAttribute('title') || themeName;
+          showToast(`Theme: ${themeTitle}`, '🎨');
+          playSound('increment');
+        });
+      });
+
+      if (dom.themeSelector) {
+        dom.themeSelector.addEventListener('change', (e) => {
+          applyTheme(e.target.value);
+          showToast(`Theme: ${e.target.options[e.target.selectedIndex].text}`, '🎨');
+        });
+      }
+
+      function toggleSound() {
+        state.soundEnabled = !state.soundEnabled;
+        localStorage.setItem('counter_sound_enabled', state.soundEnabled ? 'true' : 'false');
+        dom.soundIcon.textContent = state.soundEnabled ? '🔊' : '🔇';
+        showToast(state.soundEnabled ? 'Sound ON' : 'Sound Muted', state.soundEnabled ? '🔊' : '🔇');
+        if (state.soundEnabled) playSound('increment');
+      }
+
+      dom.btnSoundToggle.addEventListener('click', toggleSound);
+
+      // Activity Drawer
+      dom.activityToggle.addEventListener('click', () => {
+        const isOpen = dom.activityList.style.display !== 'none';
+        dom.activityList.style.display = isOpen ? 'none' : 'flex';
+        dom.activitySection.classList.toggle('open', !isOpen);
+      });
+
+      // Direct Value Modal
+      dom.counterWrap.addEventListener('click', () => {
+        dom.inputDirectValue.value = state.count;
+        dom.modalSetValue.classList.add('open');
+        dom.inputDirectValue.focus();
+        dom.inputDirectValue.select();
+      });
+
+      dom.btnCancelValue.addEventListener('click', () => {
+        dom.modalSetValue.classList.remove('open');
+      });
+
+      dom.btnSubmitValue.addEventListener('click', () => {
+        const val = parseInt(dom.inputDirectValue.value, 10);
+        if (!Number.isNaN(val)) {
+          performSetDirectValue(val);
+          dom.modalSetValue.classList.remove('open');
+        }
+      });
+
+      dom.inputDirectValue.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') dom.btnSubmitValue.click();
+        if (e.key === 'Escape') dom.btnCancelValue.click();
+      });
+
+      // Shortcuts Modal
+      dom.btnShortcutsToggle.addEventListener('click', () => {
+        dom.modalShortcuts.classList.add('open');
+      });
+
+      dom.btnCloseShortcuts.addEventListener('click', () => {
+        dom.modalShortcuts.classList.remove('open');
+      });
+
+      [dom.modalSetValue, dom.modalShortcuts].forEach(modal => {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) modal.classList.remove('open');
+        });
+      });
+
+      // Hotkeys
+      function highlightKey(el) {
+        if (!el) return;
+        el.classList.add('active-key');
+        setTimeout(() => el.classList.remove('active-key'), 200);
+      }
+
+      window.addEventListener('keydown', (e) => {
+        if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+        if (e.key === 'Escape') {
+          dom.modalSetValue.classList.remove('open');
+          dom.modalShortcuts.classList.remove('open');
+          return;
+        }
+
+        if (e.key === '+' || e.key === '=' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          highlightKey(dom.kbdPlus);
+          dom.btnIncrement.classList.add('key-pressed');
+          performIncrement();
+        } else if (e.key === '-' || e.key === '_' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          highlightKey(dom.kbdMinus);
+          dom.btnDecrement.classList.add('key-pressed');
+          performDecrement();
+        } else if (e.key === ' ') {
+          e.preventDefault();
+          highlightKey(dom.kbdSpace);
+          dom.btnIncrement.classList.add('key-pressed');
+          performIncrement();
+        } else if (e.key.toLowerCase() === 'r') {
+          e.preventDefault();
+          highlightKey(dom.kbdR);
+          dom.btnReset.classList.add('key-pressed');
+          performReset();
+        } else if (e.key.toLowerCase() === 'm') {
+          e.preventDefault();
+          toggleSound();
+        } else if (e.key === '?') {
+          e.preventDefault();
+          dom.modalShortcuts.classList.toggle('open');
+        } else if (['1', '2', '3', '4', '5'].includes(e.key)) {
+          const idx = parseInt(e.key, 10) - 1;
+          if (dom.stepChips[idx]) dom.stepChips[idx].click();
+        }
+      });
+
+      window.addEventListener('keyup', () => {
+        dom.btnIncrement.classList.remove('key-pressed');
+        dom.btnDecrement.classList.remove('key-pressed');
+        dom.btnReset.classList.remove('key-pressed');
+      });
+
+      // Initialization
+      applyTheme(state.theme);
+      dom.soundIcon.textContent = state.soundEnabled ? '🔊' : '🔇';
+      apiRequest('/count', 'GET', null, null);
+
+    })();
+  </script>
+</body>
+</html>
